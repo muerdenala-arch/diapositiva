@@ -1,0 +1,1167 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Unidad 6 — Dirección Estratégica en Empresas Agropecuarias</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&display=swap" rel="stylesheet"/>
+  <!-- GSAP Core y CSSPlugin -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <style>
+    :root {
+      --bg: #09090c;
+      --surface: #111116;
+      --border: rgba(255,255,255,0.07);
+      --accent: #3fe06a;
+      --accent2: #1ea84a;
+      --text: #f0f0f5;
+      --muted: #a0a0b0;
+      --card-bg: rgba(255,255,255,0.04);
+    }
+    *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+
+    html, body {
+      width:100%; height:100%;
+      overflow:hidden;
+      background:var(--bg);
+      font-family:'Inter', sans-serif;
+      color:var(--text);
+      user-select:none;
+      -webkit-font-smoothing:antialiased;
+    }
+
+    /* ─── OPTIMIZACIÓN GPU ──────────── */
+    .slide, .anim-text, .anim-item, .anim-image, .emoji-sprite {
+      will-change: transform, opacity;
+    }
+
+    /* ─── CONTENEDOR DE NAVEGACIÓN PRINCIPAL ──────────── */
+    #deck-container {
+      position:relative;
+      width:100vw; height:100vh;
+      overflow:hidden;
+    }
+
+    .slide {
+      position:absolute; inset:0;
+      display:flex; flex-direction:column;
+      justify-content:center; align-items:center;
+      padding:3vw 5vw;
+      opacity:0; visibility:hidden;
+      background: var(--bg);
+      z-index: 1;
+      transform-origin: center center;
+    }
+    .slide.is-active { visibility:visible; z-index:10; opacity: 1;}
+
+    /* ─── FONDOS E IMÁGENES ─────────────────────────────── */
+    .slide-bg-img {
+      position:absolute; inset:0; z-index:0;
+      background-size:cover; background-position:center;
+      will-change: transform;
+    }
+    .slide-bg-img::after {
+      content:'';
+      position:absolute; inset:0;
+      background:linear-gradient(135deg, rgba(9,9,12,.92) 0%, rgba(9,9,12,.6) 100%);
+    }
+    .slide > * { position:relative; z-index:1; }
+
+    /* ─── LAYOUT ────────── */
+    .content { max-width:1300px; width:100%; }
+    .grid-2 { display:grid; grid-template-columns:1fr 1fr; gap:3vw; align-items:center; }
+    .grid-3 { display:grid; grid-template-columns:repeat(3,1fr); gap:1.2rem; margin-top:1rem; }
+    .grid-4 { display:grid; grid-template-columns:repeat(4,1fr); gap:1rem; margin-top:1rem; }
+    .col { display:flex; flex-direction:column; gap:1rem; }
+    
+    /* ─── TIPOGRAFÍA BALANCEADA ─── */
+    .eyebrow {
+      font-size: clamp(.8rem, 1.2vw, 1rem);
+      font-weight:700; letter-spacing:.25em;
+      text-transform:uppercase; color:var(--accent);
+    }
+    h1 {
+      font-size:clamp(3rem, 5vw, 5rem);
+      font-weight:900; line-height:1.05;
+      letter-spacing:-.03em;
+    }
+    h2 {
+      font-size:clamp(2rem, 3.5vw, 3rem);
+      font-weight:800; line-height:1.1;
+      letter-spacing:-.025em;
+    }
+    h3 {
+      font-size:clamp(1.5rem, 2vw, 2rem);
+      font-weight:700; color:var(--text);
+    }
+    .lead {
+      font-size:clamp(1.1rem, 1.4vw, 1.3rem);
+      color:rgba(255,255,255,0.85); line-height:1.5;
+    }
+
+    /* ─── COMPONENTES ────────────── */
+    .card {
+      background:var(--card-bg); border:1px solid var(--border);
+      border-radius:12px; padding:1.2rem;
+      display:flex; flex-direction:column; gap:0.6rem;
+    }
+    .card-icon { font-size:1.8rem; }
+    .card-title { font-size:1.1rem; font-weight:700; color:var(--text); }
+    .card-body { font-size:0.95rem; color:var(--muted); line-height:1.5; }
+
+    .fancy-list { list-style:none; display:flex; flex-direction:column; gap:0.6rem; }
+    .fancy-list li {
+      display:flex; align-items:flex-start; gap:0.8rem;
+      font-size:1rem; color:var(--muted); line-height:1.5;
+    }
+    .fancy-list li span.dot {
+      min-width:8px; height:8px; border-radius:50%;
+      background:var(--accent); margin-top:.45em; flex-shrink:0;
+    }
+    .fancy-list li strong { color:var(--text); }
+
+    .img-frame {
+      width:100%; border-radius:16px; overflow:hidden;
+      box-shadow:0 20px 50px rgba(0,0,0,.5), 0 0 0 1px var(--border);
+      aspect-ratio:16/9;
+      transform-origin: center;
+    }
+    .img-frame img { width:100%; height:100%; object-fit:cover; display:block; }
+    .img-tall { aspect-ratio: 4/5; }
+
+    .chips { display:flex; flex-wrap:wrap; gap:.6rem; margin-top: 0.5rem; }
+    .chip {
+      background: rgba(63,224,106,0.1); border:1px solid var(--accent); color:var(--accent);
+      font-size:0.9rem; font-weight:600; padding:.4em 1em; border-radius:99px;
+      letter-spacing:.04em;
+    }
+    .accent-bar { width:4rem; height:4px; background:var(--accent); border-radius:3px; margin: 0.2rem 0; }
+
+    /* ─── ANIMACIONES DECORATIVAS ────────────── */
+    .decor-layer {
+      position: absolute; inset: 0; pointer-events: none; z-index: 0;
+    }
+    .emoji-sprite { 
+      position: absolute; font-size: 5rem; opacity: 1;
+      filter: drop-shadow(0 15px 15px rgba(0,0,0,0.6));
+    }
+    .bubble {
+      position: absolute; background: white; color: black; font-weight: 800; padding: 0.5rem 1rem;
+      border-radius: 20px; font-size: 1.2rem; opacity: 0; z-index: 10;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.5); font-family: sans-serif;
+    }
+    .bubble::after {
+      content: ''; position: absolute; bottom: -10px; left: 20px;
+      border-width: 10px 10px 0 0; border-style: solid; border-color: white transparent transparent transparent;
+    }
+
+    /* ─── UI CONTROLS (HUD) ─────────────────────────────── */
+    #progress-track {
+      position:fixed; bottom:0; left:0; right:0; height:6px;
+      background:rgba(255,255,255,.06); z-index:999;
+    }
+    #progress-fill { height:100%; background:var(--accent); width:0%; transition: width 0.3s; }
+
+    #counter {
+      position:fixed; bottom:1.5rem; right:2rem;
+      font-size:1rem; font-weight:700; color:var(--muted);
+      letter-spacing:.1em; z-index:999;
+    }
+  </style>
+</head>
+<body>
+
+<!-- HUD -->
+<div id="progress-track"><div id="progress-fill"></div></div>
+<div id="counter">1 / 22</div>
+
+<!-- CONTENEDOR PRINCIPAL -->
+<div id="deck-container">
+
+  <!-- ==================== 1. PORTADA ==================== -->
+  <section class="slide is-active" id="slide-1">
+    <div class="decor-layer" id="scene-1"></div>
+    <div class="slide-bg-img" style="background-image:url('img_portada.jpg')"></div>
+    <div class="content col" style="align-items:center; text-align:center; gap:2rem;">
+      <p class="eyebrow anim-text">Administración y Gestión de Empresas Agropecuarias · 2026</p>
+      <div class="accent-bar anim"></div>
+      <h1 class="anim-text">Dirección Estratégica</h1>
+      <p class="lead anim-text">en Empresas Agropecuarias — Unidad Temática N° 6</p>
+    </div>
+  </section>
+
+  <!-- ==================== 2. 6.1 INTRODUCCIÓN ==================== -->
+  <section class="slide" id="slide-2">
+    <div class="decor-layer" id="scene-2"></div>
+    <div class="content grid-2">
+      <div class="col">
+        <p class="eyebrow anim-text">6.1 Introducción</p>
+        <h2 class="anim-text">¿Qué es la Dirección Estratégica?</h2>
+        <div class="accent-bar anim"></div>
+        <p class="lead anim-text">Es un proceso fundamental que implica la formulación, implementación y evaluación de estrategias a largo plazo.</p>
+        <p class="lead anim-text" style="color:var(--muted)">Su objetivo es asegurar la sostenibilidad y competitividad en el mercado.</p>
+        <ul class="fancy-list" style="margin-top:0.5rem;">
+          <li class="anim-item"><span class="dot"></span><div class="anim-text"><strong>Diferencia con Gestión Operativa:</strong> Mientras la operativa se enfoca en actividades diarias, la dirección estratégica se concentra en decisiones de alto nivel que afectan el futuro global de la empresa.</div></li>
+        </ul>
+      </div>
+      <div class="img-frame anim-image"><img src="img_portada.jpg" alt="Campo agropecuario"/></div>
+    </div>
+  </section>
+
+  <!-- ==================== 3. 6.2.1 ENTORNO EXTERNO (MACRO) ==================== -->
+  <section class="slide" id="slide-3">
+    <div class="decor-layer" id="scene-3"></div>
+    <div class="content col">
+      <p class="eyebrow anim-text">6.2.1 Análisis del Entorno Externo</p>
+      <h2 class="anim-text">Factores Macroambientales (PESTEL)</h2>
+      <div class="grid-3">
+        <div class="card anim-item">
+          <div class="card-icon">📉</div>
+          <div class="card-title">Económicos</div>
+          <div class="card-body">Inflación, tipos de interés, tasas de cambio, crecimiento económico y políticas fiscales que afectan costos y poder adquisitivo.</div>
+        </div>
+        <div class="card anim-item">
+          <div class="card-icon">⚖️</div>
+          <div class="card-title">Políticos y Legales</div>
+          <div class="card-body">Políticas agrícolas, regulaciones ambientales, subsidios, impuestos, acuerdos comerciales y leyes laborales.</div>
+        </div>
+        <div class="card anim-item">
+          <div class="card-icon">👥</div>
+          <div class="card-title">Socioculturales</div>
+          <div class="card-body">Preferencias de consumidores, tendencias demográficas, hábitos alimentarios y preocupación por la sostenibilidad.</div>
+        </div>
+        <div class="card anim-item">
+          <div class="card-icon">💻</div>
+          <div class="card-title">Tecnológicos</div>
+          <div class="card-body">Innovaciones en biotecnología, maquinaria, gestión de datos y técnicas de cultivo que mejoran la eficiencia.</div>
+        </div>
+        <div class="card anim-item">
+          <div class="card-icon">🌍</div>
+          <div class="card-title">Ambientales</div>
+          <div class="card-body">Cambio climático, disponibilidad de recursos naturales, calidad del suelo/agua y regulaciones medioambientales.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== 4. 6.2.1 ENTORNO EXTERNO (MICRO & HERRAMIENTAS) ==================== -->
+  <section class="slide" id="slide-4">
+    <div class="decor-layer" id="scene-4"></div>
+    <div class="content grid-2">
+      <div class="col">
+        <p class="eyebrow anim-text">6.2.1 Entorno Externo</p>
+        <h2 class="anim-text">Microambiente y Herramientas</h2>
+        <ul class="fancy-list">
+          <li class="anim-item"><span class="dot"></span><div class="anim-text"><strong>Competidores:</strong> Identificación y análisis de competencia directa e indirecta.</div></li>
+          <li class="anim-item"><span class="dot"></span><div class="anim-text"><strong>Proveedores:</strong> Relación, precios, calidad y fiabilidad del suministro de insumos.</div></li>
+          <li class="anim-item"><span class="dot"></span><div class="anim-text"><strong>Clientes:</strong> Segmentación, comportamiento y necesidades del mercado.</div></li>
+          <li class="anim-item"><span class="dot"></span><div class="anim-text"><strong>Intermediarios:</strong> Eficiencia y costos logísticos y de canales de distribución.</div></li>
+        </ul>
+      </div>
+      <div class="col">
+        <div class="card anim-item" style="background:rgba(63,224,106,0.1); border-color:var(--accent);">
+          <div class="card-title" style="color:var(--accent);">Herramientas Clave</div>
+          <ul class="fancy-list" style="margin-top:0.5rem;">
+            <li><span class="dot"></span><div class="anim-text"><strong>Análisis PESTEL:</strong> Factores Políticos, Económicos, Socioculturales, Tecnológicos, Ambientales y Legales.</div></li>
+            <li><span class="dot"></span><div class="anim-text"><strong>Cinco Fuerzas de Porter:</strong> Competencia en la industria, amenaza de nuevos entrantes y productos sustitutos, y poder de proveedores y clientes.</div></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== 5. 6.2.2 ENTORNO INTERNO ==================== -->
+  <section class="slide" id="slide-5">
+    <div class="decor-layer" id="scene-5"></div>
+    <div class="content grid-2">
+      <div class="col">
+        <p class="eyebrow anim-text">6.2.2 Análisis del Entorno Interno</p>
+        <h2 class="anim-text">Recursos, Capacidades y Diagnóstico</h2>
+        <div class="card anim-item">
+          <div class="card-title">Recursos</div>
+          <div class="card-body"><strong>Humanos:</strong> Habilidades y motivación. <strong>Financieros:</strong> Liquidez y rentabilidad. <strong>Físicos:</strong> Tierra y tecnología. <strong>Intangibles:</strong> Marca y patentes.</div>
+        </div>
+        <div class="card anim-item">
+          <div class="card-title">Capacidades</div>
+          <div class="card-body"><strong>Operativas:</strong> Eficiencia y calidad. <strong>Innovación:</strong> Nuevos productos. <strong>Marketing:</strong> Distribución y ventas. <strong>Gestión:</strong> Liderazgo y cultura.</div>
+        </div>
+      </div>
+      <div class="col">
+        <h3 class="anim-text">Herramientas de Análisis Interno</h3>
+        <ul class="fancy-list" style="margin-top:0.5rem;">
+          <li class="anim-item"><span class="dot"></span><div class="anim-text"><strong>Análisis FODA:</strong> Fortalezas, Oportunidades, Debilidades y Amenazas.</div></li>
+          <li class="anim-item"><span class="dot"></span><div class="anim-text"><strong>Cadena de Valor (Porter):</strong> Evalúa actividades primarias y de apoyo que crean valor.</div></li>
+          <li class="anim-item"><span class="dot"></span><div class="anim-text"><strong>Matriz BCG:</strong> Analiza el portafolio en términos de participación de mercado y crecimiento.</div></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== 6. 6.3.1 ESTRATEGIAS COMPETITIVAS ==================== -->
+  <section class="slide" id="slide-6">
+    <div class="decor-layer" id="scene-6"></div>
+    <div class="content col">
+      <p class="eyebrow anim-text">6.3.1 Formulación de Estrategias</p>
+      <h2 class="anim-text">Estrategias Genéricas de Porter</h2>
+      <div class="grid-3">
+        <div class="card anim-item">
+          <div class="card-icon">💰</div>
+          <div class="card-title">1. Liderazgo en Costos</div>
+          <div class="card-body">Ser el productor de menor costo. Se logra mediante: eficiencia operativa, economías de escala, tecnología/automatización y excelente negociación con proveedores.</div>
+        </div>
+        <div class="card anim-item">
+          <div class="card-icon">🌟</div>
+          <div class="card-title">2. Diferenciación</div>
+          <div class="card-body">Ofrecer productos únicos percibidos como superiores. Se logra mediante: alta calidad del producto, innovación constante, marca/reputación y servicio al cliente de excelencia.</div>
+        </div>
+        <div class="card anim-item">
+          <div class="card-icon">🎯</div>
+          <div class="card-title">3. Enfoque</div>
+          <div class="card-body">Atender a un segmento específico (nicho) con necesidades particulares. Puede dividirse en enfoque de bajos costos o enfoque de diferenciación exclusiva.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== 7. 6.3.1 INTEGRACIÓN Y DIVERSIFICACIÓN ==================== -->
+  <section class="slide" id="slide-7">
+    <div class="decor-layer" id="scene-7"></div>
+    <div class="content grid-2">
+      <div class="col">
+        <p class="eyebrow anim-text">6.3.1 Formulación de Estrategias</p>
+        <h2 class="anim-text">Integración y Diversificación</h2>
+        <div class="card anim-item">
+          <div class="card-title">4. Integración Vertical y Horizontal</div>
+          <ul class="fancy-list" style="margin-top:0.3rem;">
+            <li><span class="dot"></span><div class="anim-text"><strong>Vertical:</strong> Controlar etapas de la cadena (hacia atrás = adquirir proveedores; hacia adelante = adquirir distribuidores).</div></li>
+            <li><span class="dot"></span><div class="anim-text"><strong>Horizontal:</strong> Fusionarse o adquirir competidores para aumentar cuota de mercado.</div></li>
+          </ul>
+        </div>
+        <div class="card anim-item">
+          <div class="card-title">5. Diversificación</div>
+          <ul class="fancy-list" style="margin-top:0.3rem;">
+            <li><span class="dot"></span><div class="anim-text"><strong>Relacionada:</strong> Expansión aprovechando sinergias con el negocio central.</div></li>
+            <li><span class="dot"></span><div class="anim-text"><strong>No Relacionada:</strong> Entrar a nuevos sectores para dispersar y minimizar riesgos globales.</div></li>
+          </ul>
+        </div>
+      </div>
+      <div class="img-frame anim-image img-tall"><img src="img_cadena.jpg" alt="Integración de la cadena"/></div>
+    </div>
+  </section>
+
+  <!-- ==================== 8. 6.3.2 IMPLEMENTACIÓN ESTRATÉGICA ==================== -->
+  <section class="slide" id="slide-8">
+    <div class="decor-layer" id="scene-8"></div>
+    <div class="content grid-2">
+      <div class="col">
+        <p class="eyebrow anim-text">6.3.2 y 6.4.1 Implementación Estratégica</p>
+        <h2 class="anim-text">Ejecución y Pasos Clave</h2>
+        <p class="lead anim-text">Poner en práctica las estrategias formuladas requiere alineación y recursos.</p>
+        <ul class="fancy-list">
+          <li class="anim-item"><span class="dot"></span><div class="anim-text"><strong>1. Definición de Objetivos:</strong> Metas claras desglosadas por departamento.</div></li>
+          <li class="anim-item"><span class="dot"></span><div class="anim-text"><strong>2. Asignación de Recursos:</strong> Distribuir recursos financieros, humanos y tecnológicos adecuadamente.</div></li>
+          <li class="anim-item"><span class="dot"></span><div class="anim-text"><strong>3. Desarrollo de Capacidades:</strong> Capacitar e invertir en nuevas tecnologías.</div></li>
+          <li class="anim-item"><span class="dot"></span><div class="anim-text"><strong>4. Estructura Organizativa:</strong> Crear equipos específicos y ajustar la jerarquía.</div></li>
+          <li class="anim-item"><span class="dot"></span><div class="anim-text"><strong>5. Comunicación y Cronogramas:</strong> Fomentar compromiso y establecer plazos e hitos (roadmaps).</div></li>
+        </ul>
+      </div>
+      <div class="img-frame anim-image"><img src="img_liderazgo.jpg" alt="Equipo ejecutando estrategia"/></div>
+    </div>
+  </section>
+
+  <!-- ==================== 9. 6.4.2 & 6.4.3 CONTROL ESTRATÉGICO ==================== -->
+  <section class="slide" id="slide-9">
+    <div class="decor-layer" id="scene-9"></div>
+    <div class="content col">
+      <p class="eyebrow anim-text">6.4.2 y 6.4.3 Control Estratégico</p>
+      <h2 class="anim-text">Monitoreo y Herramientas</h2>
+      <div class="grid-4">
+        <div class="card anim-item">
+          <div class="card-icon">📈</div>
+          <div class="card-title">Componentes de Control</div>
+          <div class="card-body">Establecimiento de KPIs, monitorización continua, evaluación de desempeño y feedback constante para ajustes.</div>
+        </div>
+        <div class="card anim-item">
+          <div class="card-icon">⚖️</div>
+          <div class="card-title">Balanced Scorecard</div>
+          <div class="card-body">Monitorear 4 perspectivas: financiera, cliente, procesos internos y aprendizaje organizacional.</div>
+        </div>
+        <div class="card anim-item">
+          <div class="card-icon">🏆</div>
+          <div class="card-title">Benchmarking</div>
+          <div class="card-body">Comparar el desempeño con competidores líderes y analizar diferencias de resultados.</div>
+        </div>
+        <div class="card anim-item">
+          <div class="card-icon">🔎</div>
+          <div class="card-title">Auditorías Internas</div>
+          <div class="card-body">Evaluaciones para asegurar efectividad en la implementación y cumplimiento de políticas.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== 10. 6.4.4 EJEMPLOS DE IMPLEMENTACIÓN ==================== -->
+  <section class="slide" id="slide-10">
+    <div class="decor-layer" id="scene-10"></div>
+    <div class="content col">
+      <p class="eyebrow anim-text">6.4.4 Casos Prácticos</p>
+      <h2 class="anim-text">Ejemplos de Implementación y Control</h2>
+      <div class="grid-3">
+        <div class="card anim-item">
+          <div class="card-title">1. Nuevas Tecnologías</div>
+          <div class="card-body">
+            <strong>Objetivo:</strong> Agricultura de precisión.<br>
+            <strong>Acciones:</strong> Capacitar en drones y software de datos.<br>
+            <strong>Control:</strong> Monitorear rendimientos y optimizar prácticas según datos recopilados.
+          </div>
+        </div>
+        <div class="card anim-item">
+          <div class="card-title">2. Expansión de Mercados</div>
+          <div class="card-body">
+            <strong>Objetivo:</strong> Entrar a mercados internacionales.<br>
+            <strong>Acciones:</strong> Estudios de mercado y alianzas locales.<br>
+            <strong>Control:</strong> Medir ventas externas y ajustar estrategias de marketing (tropicalización).
+          </div>
+        </div>
+        <div class="card anim-item">
+          <div class="card-title">3. Responsabilidad Ambiental</div>
+          <div class="card-body">
+            <strong>Objetivo:</strong> Sostenibilidad operativa.<br>
+            <strong>Acciones:</strong> Reducir pesticidas químicos y certificar productos.<br>
+            <strong>Control:</strong> Medir impacto ambiental y auditar normas de sostenibilidad orgánicas.
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== 11. 6.5.1 LIDERAZGO ==================== -->
+  <section class="slide" id="slide-11">
+    <div class="decor-layer" id="scene-11"></div>
+    <div class="content grid-2">
+      <div class="img-frame anim-image"><img src="img_liderazgo.jpg" alt="Líderes agrícolas"/></div>
+      <div class="col">
+        <p class="eyebrow anim-text">6.5.1 Liderazgo en el Sector</p>
+        <h2 class="anim-text">El Líder Agropecuario Efectivo</h2>
+        <ul class="fancy-list">
+          <li class="anim-item"><span class="dot"></span><div class="anim-text"><strong>Visión y Estrategia:</strong> Guiar hacia objetivos a largo plazo.</div></li>
+          <li class="anim-item"><span class="dot"></span><div class="anim-text"><strong>Conocimiento del Sector:</strong> Dominio de prácticas, mercados y regulaciones.</div></li>
+          <li class="anim-item"><span class="dot"></span><div class="anim-text"><strong>Adaptabilidad:</strong> Responder ante el clima y la volatilidad económica.</div></li>
+          <li class="anim-item"><span class="dot"></span><div class="anim-text"><strong>Empatía y Motivación:</strong> Inspirar y atender necesidades del equipo.</div></li>
+        </ul>
+        <div class="chips">
+          <span class="chip anim-item">Desarrollo de Talento</span>
+          <span class="chip anim-item">Innovación</span>
+          <span class="chip anim-item">Sostenibilidad RSC</span>
+          <span class="chip anim-item">Alianzas Estratégicas</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== 12. 6.5.2 GESTIÓN DEL CAMBIO ==================== -->
+  <section class="slide" id="slide-12">
+    <div class="decor-layer" id="scene-12"></div>
+    <div class="content col">
+      <p class="eyebrow anim-text">6.5.2 Gestión del Cambio</p>
+      <h2 class="anim-text">Pasos para la Transformación</h2>
+      <div class="grid-4">
+        <div class="card anim-item"><div class="card-icon">1️⃣</div><div class="card-title">Diagnóstico</div><div class="card-body">Identificar necesidad de cambio vía análisis del entorno.</div></div>
+        <div class="card anim-item"><div class="card-icon">2️⃣</div><div class="card-title">Estrategia</div><div class="card-body">Plan detallado, responsables, plazos y visión clara.</div></div>
+        <div class="card anim-item"><div class="card-icon">3️⃣</div><div class="card-title">Comunicación</div><div class="card-body">Uso de canales efectivos para asegurar comprensión.</div></div>
+        <div class="card anim-item"><div class="card-icon">4️⃣</div><div class="card-title">Implementación</div><div class="card-body">Ejecución estructurada promoviendo la participación.</div></div>
+        <div class="card anim-item"><div class="card-icon">5️⃣</div><div class="card-title">Resistencia</div><div class="card-body">Identificar barreras y proporcionar apoyo, formación y recursos.</div></div>
+        <div class="card anim-item"><div class="card-icon">6️⃣</div><div class="card-title">Evaluación</div><div class="card-body">Uso de KPIs para medir progreso y ajustar la dirección.</div></div>
+        <div class="card anim-item"><div class="card-icon">7️⃣</div><div class="card-title">Consolidación</div><div class="card-body">Integración cultural y celebración de éxitos logrados.</div></div>
+        <div class="card anim-item"><div class="card-icon">🛠️</div><div class="card-title">Herramientas</div><div class="card-body">Análisis de impacto, planes de comunicación y gestión de proyectos.</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== 13. NUEVA: 6.5.3 EJEMPLOS LIDERAZGO ==================== -->
+  <section class="slide" id="slide-13">
+    <div class="decor-layer" id="scene-13"></div>
+    <div class="content col">
+      <p class="eyebrow anim-text">6.5.3 Casos Prácticos</p>
+      <h2 class="anim-text">Ejemplos de Liderazgo y Gestión del Cambio</h2>
+      <div class="grid-3">
+        <div class="card anim-item">
+          <div class="card-icon">🚁</div>
+          <div class="card-title">1. Agricultura de Precisión</div>
+          <div class="card-body">
+            <strong>Liderazgo:</strong> Impulsar la adopción de tecnologías avanzadas para optimizar el uso de recursos.<br><br>
+            <strong>Gestión del Cambio:</strong> Implementar programas de formación (ej. uso de drones y datos) y establecer un plan de comunicación sobre los beneficios tecnológicos.
+          </div>
+        </div>
+        <div class="card anim-item">
+          <div class="card-icon">🌱</div>
+          <div class="card-title">2. Prácticas Sostenibles</div>
+          <div class="card-body">
+            <strong>Liderazgo:</strong> Promover prácticas agrícolas orgánicas que reduzcan el impacto ambiental.<br><br>
+            <strong>Gestión del Cambio:</strong> Desarrollar una estrategia de transición que incluya capacitación, certificación de productos y gestión de resistencia mediante incentivos.
+          </div>
+        </div>
+        <div class="card anim-item">
+          <div class="card-icon">🌎</div>
+          <div class="card-title">3. Expansión Internacional</div>
+          <div class="card-body">
+            <strong>Liderazgo:</strong> Identificar y aprovechar estratégicamente oportunidades en mercados extranjeros.<br><br>
+            <strong>Gestión del Cambio:</strong> Plan detallado con estudios de mercado, adaptación de productos y alineación total de los empleados con los objetivos de expansión.
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== 14. 6.6.1 GESTIÓN DE RIESGOS ==================== -->
+  <section class="slide" id="slide-14">
+    <div class="decor-layer" id="scene-14"></div>
+    <div class="content grid-2">
+      <div class="col">
+        <p class="eyebrow anim-text">6.6.1 Gestión de Riesgos</p>
+        <h2 class="anim-text">Mitigando la Volatilidad</h2>
+        <div class="card anim-item">
+          <div class="card-title">Identificación de Riesgos</div>
+          <div class="card-body"><strong>Climáticos:</strong> Sequías, inundaciones. <strong>Económicos:</strong> Precios de commodities. <strong>Financieros:</strong> Liquidez e interés. <strong>Regulatorios:</strong> Políticas ambientales. <strong>Salud:</strong> Plagas y enfermedades.</div>
+        </div>
+        <div class="card anim-item">
+          <div class="card-title">Proceso de Mitigación</div>
+          <ul class="fancy-list" style="margin-top:0.3rem;">
+            <li class="anim-item"><span class="dot"></span><div class="anim-text">Evaluar probabilidad e impacto.</div></li>
+            <li class="anim-item"><span class="dot"></span><div class="anim-text">Diversificar cultivos y mercados.</div></li>
+            <li class="anim-item"><span class="dot"></span><div class="anim-text">Contratar seguros agrícolas.</div></li>
+            <li class="anim-item"><span class="dot"></span><div class="anim-text">Monitorear continuamente y establecer protocolos de respuesta.</div></li>
+          </ul>
+        </div>
+      </div>
+      <div class="img-frame anim-image"><img src="img_sostenibilidad.jpg" alt="Campo agrícola con paneles solares"/></div>
+    </div>
+  </section>
+
+  <!-- ==================== 15. 6.6.2 SOSTENIBILIDAD ==================== -->
+  <section class="slide" id="slide-15">
+    <div class="decor-layer" id="scene-15"></div>
+    <div class="content col">
+      <p class="eyebrow anim-text">6.6.2 Sostenibilidad</p>
+      <h2 class="anim-text">Los 3 Pilares Sostenibles</h2>
+      <div class="grid-3">
+        <div class="card anim-item">
+          <div class="card-icon">💵</div>
+          <div class="card-title">Sostenibilidad Económica</div>
+          <div class="card-body">Garantizar la rentabilidad a largo plazo y la eficiencia en el uso de los recursos para reducir de manera inteligente los costos operativos.</div>
+        </div>
+        <div class="card anim-item">
+          <div class="card-icon">🌍</div>
+          <div class="card-title">Sostenibilidad Ambiental</div>
+          <div class="card-body">Agricultura de conservación, protección de biodiversidad, uso eficiente de agua, Manejo Integrado de Plagas (MIP) y energías renovables (biogás, solar).</div>
+        </div>
+        <div class="card anim-item">
+          <div class="card-icon">🤝</div>
+          <div class="card-title">Sostenibilidad Social</div>
+          <div class="card-body">Condiciones laborales justas y seguras, responsabilidad social corporativa comunitaria, educación y certificaciones orgánicas internacionales.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== 16. NUEVA: 6.6.3 EJEMPLOS GESTIÓN DE RIESGOS ==================== -->
+  <section class="slide" id="slide-16">
+    <div class="decor-layer" id="scene-16"></div>
+    <div class="content col">
+      <p class="eyebrow anim-text">6.6.3 Casos Prácticos</p>
+      <h2 class="anim-text">Ejemplos de Gestión de Riesgos y Sostenibilidad</h2>
+      <div class="grid-3">
+        <div class="card anim-item">
+          <div class="card-icon">☀️</div>
+          <div class="card-title">1. Uso de Energías Renovables</div>
+          <div class="card-body">
+            <strong>Riesgo:</strong> Dependencia de combustibles fósiles y volatilidad de precios.<br><br>
+            <strong>Estrategia:</strong> Implementar paneles solares y sistemas de biogás.<br><br>
+            <strong>Beneficio:</strong> Reducción de costos energéticos y menor impacto ambiental.
+          </div>
+        </div>
+        <div class="card anim-item">
+          <div class="card-title">2. Diversificación de Cultivos</div>
+          <div class="card-body">
+            <strong>Riesgo:</strong> Dependencia de un solo cultivo susceptible a plagas o fluctuaciones.<br><br>
+            <strong>Estrategia:</strong> Diversificar la producción con cultivos adaptados al clima local.<br><br>
+            <strong>Beneficio:</strong> Reducción del riesgo económico y mejor uso del suelo.
+          </div>
+        </div>
+        <div class="card anim-item">
+          <div class="card-icon">🏅</div>
+          <div class="card-title">3. Certificación Orgánica</div>
+          <div class="card-body">
+            <strong>Riesgo:</strong> Pérdida de mercado por la creciente demanda de sostenibilidad.<br><br>
+            <strong>Estrategia:</strong> Obtener certificaciones y promover el cultivo orgánico.<br><br>
+            <strong>Beneficio:</strong> Acceso a nuevos mercados y aumento de rentabilidad (prima orgánica).
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== 17. 6.7 INNOVACIÓN Y TECNOLOGÍA (PARTE 1) ==================== -->
+  <section class="slide" id="slide-17">
+    <div class="decor-layer" id="scene-17"></div>
+    <div class="content grid-2">
+      <div class="img-frame anim-image"><img src="img_tecnologia.jpg" alt="Dron agrícola"/></div>
+      <div class="col">
+        <p class="eyebrow anim-text">6.7 Innovación y Tecnología (Parte 1)</p>
+        <h2 class="anim-text">Transformando el Campo</h2>
+        <ul class="fancy-list">
+          <li class="anim-item"><span class="dot"></span><div class="anim-text"><strong>Agricultura de Precisión:</strong> Sensores, GPS e imágenes para aplicación exacta de insumos.</div></li>
+          <li class="anim-item"><span class="dot"></span><div class="anim-text"><strong>Biotecnología:</strong> Edición genética (CRISPR) para resistencia a climas extremos y plagas.</div></li>
+          <li class="anim-item"><span class="dot"></span><div class="anim-text"><strong>Robótica:</strong> Tractores autónomos y cosechadoras para suplir falta de mano de obra y ganar eficiencia.</div></li>
+          <li class="anim-item"><span class="dot"></span><div class="anim-text"><strong>Sistemas AGMS:</strong> Software integral de gestión agrícola para decisiones en tiempo real (Big Data).</div></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== 18. NUEVA: 6.7 INNOVACIÓN Y TECNOLOGÍA (PARTE 2) ==================== -->
+  <section class="slide" id="slide-18">
+    <div class="decor-layer" id="scene-18"></div>
+    <div class="content grid-2">
+      <div class="col">
+        <p class="eyebrow anim-text">6.7 Innovación y Tecnología (Parte 2)</p>
+        <h2 class="anim-text">Sostenibilidad y Cadena de Suministro</h2>
+        <div class="card anim-item">
+          <div class="card-title">5. Energías Renovables</div>
+          <div class="card-body">
+            <strong>Descripción:</strong> Uso de fuentes renovables para operaciones agrícolas.<br>
+            <strong>Tecnologías:</strong> Paneles solares, plantas de biogás, energía eólica.<br>
+            <strong>Beneficios:</strong> Reducción de costos, menor dependencia fósil y gran sostenibilidad ambiental.
+          </div>
+        </div>
+        <div class="card anim-item">
+          <div class="card-title">6. Innovaciones en la Cadena de Suministro</div>
+          <div class="card-body">
+            <strong>Descripción:</strong> Mejoras drásticas en la logística y distribución.<br>
+            <strong>Tecnologías:</strong> Blockchain, Internet de las Cosas (IoT), sensores de seguimiento.<br>
+            <strong>Beneficios:</strong> Trazabilidad total, reducción de pérdidas postcosecha y seguridad alimentaria.
+          </div>
+        </div>
+      </div>
+      <div class="img-frame anim-image"><img src="img_sostenibilidad.jpg" alt="Innovación en Sostenibilidad"/></div>
+    </div>
+  </section>
+
+  <!-- ==================== 19. 6.8 COMERCIALIZACIÓN Y CADENA DE VALOR ==================== -->
+  <section class="slide" id="slide-19">
+    <div class="decor-layer" id="scene-19"></div>
+    <div class="content grid-2">
+      <div class="col">
+        <p class="eyebrow anim-text">6.8 Comercialización y Cadena de Valor</p>
+        <h2 class="anim-text">Del Campo al Consumidor</h2>
+        <p class="lead anim-text">Maximizar las ganancias asegurando calidad y trazabilidad total.</p>
+        <ul class="fancy-list">
+          <li class="anim-item"><span class="dot"></span><div class="anim-text"><strong>1. Producción:</strong> Etapa inicial donde se produce la materia prima de forma eficiente.</div></li>
+          <li class="anim-item"><span class="dot"></span><div class="anim-text"><strong>2. Transformación:</strong> Proceso para crear los productos finales con alta calidad.</div></li>
+          <li class="anim-item"><span class="dot"></span><div class="anim-text"><strong>3. Distribución:</strong> Logística para garantizar la disponibilidad oportuna en los mercados.</div></li>
+          <li class="anim-item"><span class="dot"></span><div class="anim-text"><strong>4. Marketing y Promoción:</strong> Estrategias para promocionar y posicionar los productos.</div></li>
+          <li class="anim-item"><span class="dot"></span><div class="anim-text"><strong>5. Venta y Distribución al Consumidor:</strong> Etapa final orientada a la satisfacción y lealtad.</div></li>
+        </ul>
+      </div>
+      <div class="img-frame anim-image"><img src="img_cadena.jpg" alt="Cadena de suministro logística"/></div>
+    </div>
+  </section>
+
+  <!-- ==================== 20. NUEVA: 6.8.3 ESTRATEGIAS DE COMERCIALIZACIÓN ==================== -->
+  <section class="slide" id="slide-20">
+    <div class="decor-layer" id="scene-20"></div>
+    <div class="content col">
+      <p class="eyebrow anim-text">6.8.3 Estrategias y Gestión</p>
+      <h2 class="anim-text">Estrategias de Comercialización</h2>
+      <div class="grid-3">
+        <div class="card anim-item"><div class="card-icon">🎯</div><div class="card-title">Segmentación de Mercado</div><div class="card-body">Identificar y dirigirse a segmentos específicos con productos adaptados a sus necesidades.</div></div>
+        <div class="card anim-item"><div class="card-icon">🏷️</div><div class="card-title">Desarrollo de Marca</div><div class="card-body">Crear una marca fuerte y reconocible que transmita valores y genere lealtad en los consumidores.</div></div>
+        <div class="card anim-item"><div class="card-icon">🤝</div><div class="card-title">Asociaciones (Partnerships)</div><div class="card-body">Colaborar con proveedores, distribuidores y minoristas para maximizar el valor de la cadena.</div></div>
+        <div class="card anim-item"><div class="card-icon">💡</div><div class="card-title">Innovación en Procesos</div><div class="card-body">Buscar constantemente nuevas formas de mejorar productos y servicios frente al mercado.</div></div>
+        <div class="card anim-item"><div class="card-icon">💲</div><div class="card-title">Estrategias de Precios</div><div class="card-body">Fijar precios basados en el valor percibido considerando demanda, costos y posicionamiento.</div></div>
+        <div class="card anim-item"><div class="card-icon">✅</div><div class="card-title">Gestión de la Calidad</div><div class="card-body">Mantener altos estándares desde la producción hasta la distribución para asegurar satisfacción.</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== 21. 6.9 DESAFÍOS FUTUROS ==================== -->
+  <section class="slide" id="slide-21">
+    <div class="decor-layer" id="scene-21"></div>
+    <div class="content col">
+      <p class="eyebrow anim-text">6.9 Desafíos Futuros</p>
+      <h2 class="anim-text">Megatendencias y Retos del Sector</h2>
+      <div class="grid-4">
+        <div class="card anim-item">
+          <div class="card-icon">🌪️</div>
+          <div class="card-title">Cambio Climático</div>
+          <div class="card-body">Afecta severamente los patrones de lluvia y las temperaturas, poniendo en riesgo la seguridad alimentaria mundial.</div>
+        </div>
+        <div class="card anim-item">
+          <div class="card-icon">💧</div>
+          <div class="card-title">Escasez de Recursos</div>
+          <div class="card-body">El incremento poblacional exige mayor eficiencia en la gestión limitada de tierras fértiles y recursos hídricos vitales.</div>
+        </div>
+        <div class="card anim-item">
+          <div class="card-icon">🌐</div>
+          <div class="card-title">Globalización</div>
+          <div class="card-body">Aumento de competencia internacional, guerras comerciales y fluctuación extrema de los precios de productos primarios.</div>
+        </div>
+        <div class="card anim-item">
+          <div class="card-icon">📡</div>
+          <div class="card-title">Brecha Digital</div>
+          <div class="card-body">El acceso desigual a conectividad e infraestructuras tecnológicas puede dejar rezagadas a las empresas agropecuarias más pequeñas.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== 22. CIERRE FINAL ==================== -->
+  <section class="slide" id="slide-22">
+    <div class="decor-layer" id="scene-22"></div>
+    <div class="slide-bg-img" style="background-image:url('img_portada.jpg')"></div>
+    <div class="content col" style="align-items:center; text-align:center; gap:2.5rem;">
+      <p class="eyebrow anim-text">Conclusión y Cierre</p>
+      <div class="accent-bar anim"></div>
+      <h1 class="anim-text" style="color:var(--accent); text-transform:uppercase;">Muchas Gracias</h1>
+      <p class="lead anim-text" style="max-width:1100px; margin: 0 auto; margin-top:1rem; text-align:center; font-size: clamp(1.3rem, 1.8vw, 2rem);">
+        La dirección estratégica exige articular el entorno, el liderazgo, la gestión de riesgos, la tecnología y la cadena de valor como un <strong>sistema totalmente integrado</strong> para garantizar la competitividad y sostenibilidad futura de las empresas agropecuarias.
+      </p>
+    </div>
+  </section>
+
+</div><!-- /deck-container -->
+
+<script>
+(() => {
+  const slides = Array.from(document.querySelectorAll('.slide'));
+  const total = slides.length;
+  const fill = document.getElementById('progress-fill');
+  const counter = document.getElementById('counter');
+
+  let current = 0;
+  let isAnimating = false;
+  let parallaxActive = true; 
+  let activeSceneTimeline = null;
+  
+  counter.textContent = `1 / ${total}`;
+
+  gsap.set(slides, { visibility: 'hidden', opacity: 0, scale: 1, zIndex: 1 });
+  gsap.set(slides[0], { visibility: 'visible', opacity: 1, scale: 1, zIndex: 10 });
+  slides[0].classList.add('is-active');
+
+  /* ---------- PARALLAX SUTIL ---------- */
+  document.addEventListener('mousemove', (e) => {
+    if (isAnimating || !parallaxActive) return; 
+    const x = (e.clientX / window.innerWidth - 0.5) * 2;
+    const y = (e.clientY / window.innerHeight - 0.5) * 2;
+    const activeSlide = slides[current];
+    if (!activeSlide) return;
+
+    gsap.to(activeSlide.querySelectorAll('.anim-image'), { x: x * 15, y: y * 15, ease: 'power2.out', duration: 0.5 });
+    gsap.to(activeSlide.querySelectorAll('.anim-item, .anim-text'), { x: x * -8, y: y * -8, ease: 'power2.out', duration: 0.5 });
+  });
+
+  /* ---------- EFECTO AVIÓN VOLANDO EN TRANSICIONES ---------- */
+  function flyAirplane(isForward) {
+    const plane = document.createElement('div');
+    plane.innerHTML = '✈️';
+    plane.className = 'emoji-sprite';
+    plane.style.fontSize = '8rem';
+    plane.style.zIndex = '99999';
+    plane.style.transform = isForward ? 'scaleX(1)' : 'scaleX(-1)';
+    document.body.appendChild(plane);
+
+    const startX = isForward ? -200 : window.innerWidth + 200;
+    const endX = isForward ? window.innerWidth + 200 : -200;
+    
+    gsap.fromTo(plane, 
+      { x: startX, y: window.innerHeight * 0.8, rotation: isForward ? -15 : 15, opacity: 1 },
+      { x: endX, y: window.innerHeight * 0.1, duration: 1.2, ease: "power1.inOut", onComplete: () => plane.remove() }
+    );
+  }
+
+  /* ---------- MOTOR DE TRANSICIÓN ZOOM PREZI ---------- */
+  function goTo(nextIdx) {
+    if (isAnimating || nextIdx === current || nextIdx < 0 || nextIdx >= total) return;
+    isAnimating = true; parallaxActive = false; 
+
+    const outSlide = slides[current];
+    const inSlide = slides[nextIdx];
+    const isForward = nextIdx > current;
+
+    flyAirplane(isForward);
+
+    outSlide.classList.remove('is-active');
+    inSlide.classList.add('is-active');
+
+    let origin = "center center";
+    const imgFrame = outSlide.querySelector('.img-frame');
+    if (imgFrame) {
+       const rect = imgFrame.getBoundingClientRect();
+       origin = `${((rect.left + rect.width/2)/window.innerWidth)*100}% ${((rect.top + rect.height/2)/window.innerHeight)*100}%`;
+    }
+    gsap.set([outSlide, inSlide], { transformOrigin: origin });
+
+    const tl = gsap.timeline({
+      onComplete: () => {
+        gsap.set(outSlide, { visibility: 'hidden', zIndex: 1, scale: 1, opacity: 0 });
+        current = nextIdx;
+        isAnimating = false;
+        updateHUD();
+        setTimeout(() => { parallaxActive = true; }, 300);
+      }
+    });
+
+    gsap.set(inSlide, { visibility: 'visible', zIndex: 10, opacity: 0, scale: isForward ? 0.3 : 3 });
+    
+    tl.to(outSlide, { scale: isForward ? 3 : 0.3, opacity: 0, duration: 0.7, ease: "power2.inOut" }, 0)
+      .to(inSlide, { scale: 1, opacity: 1, duration: 0.7, ease: "power2.inOut" }, 0);
+
+    setTimeout(() => { animateItemsIn(inSlide, nextIdx + 1); }, 350); 
+  }
+
+  /* ---------- HELPER PARA CREAR EMOJIS ---------- */
+  function createEmoji(parent, emoji, x, y, size) {
+    const el = document.createElement('div');
+    el.className = 'emoji-sprite';
+    el.innerHTML = emoji;
+    el.style.left = x; el.style.top = y; 
+    if(size) el.style.fontSize = size;
+    parent.appendChild(el);
+    return el;
+  }
+
+  /* ---------- ESCENAS COMPLEJAS (EASTER EGGS 22 SLIDES) ---------- */
+  const scenes = {
+    1: (layer) => { // Sol amanece y pájaro vuela
+      const sun = createEmoji(layer, '☀️', '80%', '10%', '8rem');
+      const bird = createEmoji(layer, '🐦', '10%', '20%', '4rem');
+      const tl = gsap.timeline();
+      tl.fromTo(sun, {y: 200, opacity: 0}, {y: 0, opacity: 1, duration: 2, ease: "back.out"})
+        .to(sun, {rotation: 20, duration: 5, yoyo: true, repeat: -1}, "-=1")
+        .fromTo(bird, {x: -200, y: 100}, {x: window.innerWidth, y: 0, duration: 8, ease: "none", repeat: -1}, 0)
+        .to(bird, {y: "-=30", duration: 1, yoyo: true, repeat: -1}, 0);
+      return tl;
+    },
+    2: (layer) => { // Tractor deja paca
+      const tractor = createEmoji(layer, '🚜', '0', '80%', '6rem');
+      const hay = createEmoji(layer, '🌾', '0', '85%', '3rem');
+      const tl = gsap.timeline();
+      tl.fromTo(tractor, {x: -200}, {x: window.innerWidth/2, duration: 4, ease: "none"})
+        .set(hay, {x: window.innerWidth/2 - 50, opacity: 1})
+        .to(tractor, {x: window.innerWidth + 200, duration: 4, ease: "none"});
+      return tl;
+    },
+    3: (layer) => { // Vaca come y Muuu
+      const cow = createEmoji(layer, '🐄', '10%', '80%', '6rem');
+      const bubble = document.createElement('div');
+      bubble.className = 'bubble'; bubble.innerText = 'Muuu';
+      bubble.style.left = '15%'; bubble.style.top = '70%';
+      layer.appendChild(bubble);
+      const tl = gsap.timeline();
+      tl.fromTo(cow, {x: -200}, {x: 0, duration: 2})
+        .to(cow, {rotation: 20, y: 20, duration: 0.5, yoyo: true, repeat: 3})
+        .to(bubble, {opacity: 1, y: -20, duration: 0.5})
+        .to(bubble, {opacity: 0, duration: 0.5, delay: 2});
+      return tl;
+    },
+    4: (layer) => { // 20 Mariposas
+      const tl = gsap.timeline();
+      for(let i=0; i<20; i++) {
+        const size = (Math.random() * 3 + 1) + 'rem';
+        const b = createEmoji(layer, '🦋', '0', '0', size);
+        tl.fromTo(b, 
+          { x: Math.random() * window.innerWidth, y: window.innerHeight + 100, opacity: 0 },
+          { x: Math.random() * window.innerWidth, y: -100, opacity: 1, duration: Math.random()*5 + 5, repeat: -1, ease: "none" }, 0
+        );
+        gsap.to(b, {x: "+=50", duration: Math.random() + 0.5, yoyo: true, repeat: -1});
+      }
+      return tl;
+    },
+    5: (layer) => { // Cerdito se sienta
+      const pig = createEmoji(layer, '🐖', '0', '80%', '5rem');
+      gsap.set(pig, {scaleX: -1});
+      const tl = gsap.timeline();
+      tl.fromTo(pig, {x: window.innerWidth}, {x: window.innerWidth/2, duration: 3, ease: "none"})
+        .to(pig, {y: 20, rotation: -10, duration: 0.5}) // sit
+        .to(pig, {y: 0, rotation: 0, duration: 0.5, delay: 2}) // stand
+        .to(pig, {x: -200, duration: 3, ease: "none"});
+      return tl;
+    },
+    6: (layer) => { // Caballo relincha
+      const horse = createEmoji(layer, '🐎', '0', '75%', '7rem');
+      gsap.set(horse, {scaleX: -1});
+      const tl = gsap.timeline();
+      tl.fromTo(horse, {x: window.innerWidth}, {x: window.innerWidth/2, duration: 2, ease: "none"})
+        .to(horse, {rotation: 30, y: -30, duration: 0.5, yoyo: true, repeat: 1}) // relincha
+        .to(horse, {x: -200, duration: 2, ease: "none"});
+      return tl;
+    },
+    7: (layer) => { // Granjero Hola
+      const farmer = createEmoji(layer, '👨‍🌾', '10%', '80%', '7rem');
+      const bubble = document.createElement('div');
+      bubble.className = 'bubble'; bubble.innerText = '¡Hola!';
+      bubble.style.left = '16%'; bubble.style.top = '70%';
+      layer.appendChild(bubble);
+      const tl = gsap.timeline();
+      tl.fromTo(farmer, {y: 300}, {y: 0, duration: 1, ease: "back.out"})
+        .to(farmer, {rotation: 15, duration: 0.3, yoyo: true, repeat: 3})
+        .to(bubble, {opacity: 1, y: -20, duration: 0.5}, "-=1")
+        .to(bubble, {opacity: 0, duration: 0.5, delay: 2});
+      return tl;
+    },
+    8: (layer) => { // Perro persigue mariposa
+      const dog = createEmoji(layer, '🐕', '0', '80%', '5rem');
+      const b = createEmoji(layer, '🦋', '0', '75%', '3rem');
+      gsap.set([dog, b], {scaleX: -1});
+      const tl = gsap.timeline({repeat: -1});
+      tl.fromTo(b, {x: window.innerWidth}, {x: 100, duration: 4, ease: "none"})
+        .fromTo(dog, {x: window.innerWidth + 100}, {x: 200, duration: 4, ease: "none"}, 0)
+        .set([dog, b], {scaleX: 1})
+        .to(b, {x: window.innerWidth, duration: 4, ease: "none"})
+        .to(dog, {x: window.innerWidth + 100, duration: 4, ease: "none"}, "-=4")
+        .set([dog, b], {scaleX: -1});
+      gsap.to(dog, {y: "-=20", duration: 0.2, yoyo: true, repeat: -1});
+      gsap.to(b, {y: "+=30", duration: 0.5, yoyo: true, repeat: -1});
+      return tl;
+    },
+    9: (layer) => { // Helicóptero rescate
+      const heli = createEmoji(layer, '🚁', '70%', '10%', '6rem');
+      const ladder = createEmoji(layer, '🪜', '72%', '10%', '4rem');
+      const person = createEmoji(layer, '🧍', '73%', '80%', '3rem');
+      gsap.set(ladder, {opacity: 0, transformOrigin: 'top'});
+      const tl = gsap.timeline();
+      tl.fromTo(heli, {x: window.innerWidth}, {x: 0, duration: 3, ease: "power2.out"})
+        .to(ladder, {opacity: 1, y: 70, scaleY: 4, duration: 1})
+        .to(person, {y: -500, duration: 2, opacity: 0, ease: "power1.in"})
+        .to(ladder, {opacity: 0, scaleY: 1, y: 0, duration: 1})
+        .to(heli, {x: -500, duration: 2, ease: "power2.in"});
+      return tl;
+    },
+    10: (layer) => { // Girasol Luna Sol
+      const flower = createEmoji(layer, '🌻', '80%', '70%', '8rem');
+      const sun = createEmoji(layer, '☀️', '10%', '10%', '6rem');
+      const moon = createEmoji(layer, '🌙', '90%', '10%', '6rem');
+      gsap.set([sun, moon], {opacity: 0});
+      const tl = gsap.timeline();
+      tl.fromTo(flower, {scale: 0, y: 100}, {scale: 1, y: 0, duration: 1.5, ease: "back.out"})
+        .to(sun, {opacity: 1, y: 50, duration: 1})
+        .to(flower, {rotation: 20, duration: 2})
+        .to(sun, {opacity: 0, y: 0, duration: 1})
+        .to(moon, {opacity: 1, y: 50, duration: 1})
+        .to(flower, {scale: 0.5, rotation: -20, opacity: 0.5, duration: 2});
+      return tl;
+    },
+    11: (layer) => { // Árbol y Manzana
+      const tree = createEmoji(layer, '🌳', '10%', '50%', '12rem');
+      const apple = createEmoji(layer, '🍎', '18%', '65%', '3rem');
+      gsap.set(apple, {opacity: 0});
+      const tl = gsap.timeline();
+      tl.fromTo(tree, {scale: 0}, {scale: 1, duration: 1.5, ease: "elastic.out"})
+        .to(apple, {opacity: 1, scale: 1, duration: 1})
+        .to(apple, {y: 200, duration: 0.5, ease: "bounce.out"})
+        .to(apple, {x: 100, rotation: 360, duration: 1});
+      return tl;
+    },
+    12: (layer) => { // Lluvia y Brote
+      const cloud = createEmoji(layer, '☁️', '40%', '10%', '8rem');
+      const rain = createEmoji(layer, '💧', '45%', '25%', '3rem');
+      const sprout = createEmoji(layer, '🌱', '45%', '85%', '4rem');
+      gsap.set([rain, sprout], {opacity: 0});
+      const tl = gsap.timeline();
+      tl.fromTo(cloud, {x: -300}, {x: 0, duration: 2})
+        .to(rain, {opacity: 1, y: 300, duration: 1, repeat: 3})
+        .fromTo(sprout, {scale: 0}, {scale: 1, opacity: 1, duration: 2}, "-=2")
+        .to(cloud, {x: window.innerWidth, duration: 3});
+      return tl;
+    },
+    13: (layer) => { // Oveja salta cerca
+      const sheep = createEmoji(layer, '🐑', '0', '75%', '5rem');
+      const fence = createEmoji(layer, '🚧', '50%', '80%', '6rem');
+      const tl = gsap.timeline();
+      tl.fromTo(fence, {y: 200}, {y: 0, duration: 1})
+        .fromTo(sheep, {x: -100}, {x: window.innerWidth/2 - 100, duration: 3, ease: "none"})
+        .to(sheep, {y: -150, x: window.innerWidth/2 + 100, duration: 0.8, ease: "power1.inOut"})
+        .to(sheep, {y: 0, duration: 0.3})
+        .to(sheep, {x: window.innerWidth + 100, duration: 3, ease: "none"});
+      return tl;
+    },
+    14: (layer) => { // Gallo canta
+      const sun = createEmoji(layer, '☀️', '20%', '50%', '10rem');
+      const rooster = createEmoji(layer, '🐓', '25%', '70%', '6rem');
+      const bubble = document.createElement('div');
+      bubble.className = 'bubble'; bubble.innerText = '¡Kikiriki!';
+      bubble.style.left = '32%'; bubble.style.top = '65%';
+      layer.appendChild(bubble);
+      gsap.set([sun, bubble], {opacity: 0});
+      const tl = gsap.timeline();
+      tl.fromTo(rooster, {x: -200}, {x: 0, duration: 2})
+        .to(sun, {opacity: 1, y: -100, duration: 2})
+        .to(bubble, {opacity: 1, y: -20, duration: 0.5})
+        .to(rooster, {scale: 1.2, duration: 0.2, yoyo: true, repeat: 3});
+      return tl;
+    },
+    15: (layer) => { // Miel y Abejas
+      const honey = createEmoji(layer, '🍯', '50%', '70%', '7rem');
+      const tl = gsap.timeline();
+      tl.fromTo(honey, {scale: 0}, {scale: 1, duration: 1.5, ease: "elastic.out"});
+      for(let i=0; i<5; i++) {
+        const bee = createEmoji(layer, '🐝', '50%', '70%', '3rem');
+        tl.to(bee, {
+          x: (Math.random() - 0.5) * 300, 
+          y: (Math.random() - 0.5) * 300 - 100, 
+          duration: 2 + Math.random(), 
+          opacity: 1, 
+          repeat: -1, yoyo: true, ease: "sine.inOut"
+        }, 0);
+      }
+      return tl;
+    },
+    16: (layer) => { // Espantapájaros
+      const corn = createEmoji(layer, '🌽', '10%', '75%', '5rem');
+      const crow = createEmoji(layer, '🐦', '80%', '10%', '3rem');
+      const scarecrow = createEmoji(layer, '🕴️', '15%', '70%', '8rem');
+      gsap.set([crow, scarecrow], {opacity: 0});
+      const tl = gsap.timeline();
+      tl.fromTo(corn, {scale: 0}, {scale: 1, duration: 1})
+        .to(crow, {opacity: 1, x: -800, y: 500, duration: 2}) // vuela hacia el maíz
+        .to(scarecrow, {opacity: 1, scale: 1.5, y: -50, duration: 0.2, ease: "power4.out"}) // aparece de golpe
+        .to(crow, {x: 100, y: -200, scaleX: -1, duration: 1}); // huye
+      return tl;
+    },
+    17: (layer) => { // OVNI abduce vaca
+      const cow = createEmoji(layer, '🐄', '50%', '85%', '5rem');
+      const ufo = createEmoji(layer, '🛸', '45%', '10%', '8rem');
+      const beam = document.createElement('div');
+      beam.style.cssText = 'position:absolute; left:48%; top:25%; width:4rem; height:60vh; background:rgba(0,255,0,0.3); opacity:0; z-index:0; filter:blur(10px);';
+      layer.appendChild(beam);
+      gsap.set(ufo, {opacity: 0});
+      const tl = gsap.timeline();
+      tl.fromTo(cow, {x: -200}, {x: 0, duration: 2})
+        .to(ufo, {opacity: 1, y: 50, duration: 1})
+        .to(beam, {opacity: 1, duration: 0.5})
+        .to(cow, {y: -500, rotation: 360, duration: 2, ease: "power1.in"})
+        .to(beam, {opacity: 0, duration: 0.2})
+        .to(ufo, {x: window.innerWidth, y: -200, duration: 1, ease: "power2.in"});
+      return tl;
+    },
+    18: (layer) => { // Carrera Tractores
+      const t1 = createEmoji(layer, '🚜', '0', '70%', '6rem');
+      const t2 = createEmoji(layer, '🚜', '0', '85%', '6rem');
+      const tl = gsap.timeline();
+      tl.fromTo(t1, {x: -200}, {x: window.innerWidth + 200, duration: 4, ease: "power2.in"})
+        .fromTo(t2, {x: -200}, {x: window.innerWidth + 200, duration: 3.5, ease: "power1.in"}, 0.5);
+      return tl;
+    },
+    19: (layer) => { // Camión de reparto
+      const truck = createEmoji(layer, '🚚', '0', '75%', '8rem');
+      const box1 = createEmoji(layer, '📦', '20%', '85%', '3rem');
+      const box2 = createEmoji(layer, '📦', '25%', '85%', '3rem');
+      gsap.set([box1, box2], {opacity: 0});
+      const tl = gsap.timeline();
+      tl.fromTo(truck, {x: window.innerWidth}, {x: window.innerWidth/2, duration: 2, ease: "power2.out"})
+        .to(box1, {opacity: 1, y: -50, duration: 0.5})
+        .to(box2, {opacity: 1, y: -50, duration: 0.5})
+        .to([box1, box2], {x: -500, opacity: 0, duration: 0.5}) // se cargan
+        .to(truck, {x: -500, duration: 2, ease: "power2.in"});
+      return tl;
+    },
+    20: (layer) => { // Tormenta
+      const cloud = createEmoji(layer, '🌩️', '70%', '10%', '10rem');
+      const light = createEmoji(layer, '⚡', '75%', '30%', '5rem');
+      const tree = createEmoji(layer, '🌳', '80%', '60%', '10rem');
+      const bird = createEmoji(layer, '🐦', '85%', '65%', '3rem');
+      gsap.set([light, bird], {opacity: 0});
+      const tl = gsap.timeline();
+      tl.fromTo(cloud, {x: window.innerWidth}, {x: 0, duration: 2})
+        .to(light, {opacity: 1, duration: 0.1, yoyo: true, repeat: 5})
+        .to(tree, {rotation: 5, duration: 0.1, yoyo: true, repeat: 10}, "-=0.5")
+        .to(bird, {opacity: 1, x: -500, y: -300, duration: 1.5});
+      return tl;
+    },
+    21: (layer) => { // Granjera riega flores
+      const f = createEmoji(layer, '👩‍🌾', '10%', '70%', '7rem');
+      const water = createEmoji(layer, '🚿', '18%', '75%', '4rem');
+      const flower = createEmoji(layer, '🌷', '25%', '80%', '4rem');
+      gsap.set([water, flower], {opacity: 0});
+      const tl = gsap.timeline();
+      tl.fromTo(f, {x: -200}, {x: 0, duration: 2})
+        .to(water, {opacity: 1, rotation: -30, duration: 0.5})
+        .to(water, {rotation: -10, duration: 0.2, yoyo: true, repeat: 5})
+        .to(flower, {opacity: 1, scale: 1.5, y: -20, duration: 1})
+        .to(water, {opacity: 0, duration: 0.5});
+      return tl;
+    },
+    22: (layer) => { // Globos y Confeti
+      const tl = gsap.timeline();
+      for(let i=0; i<30; i++) {
+        const conf = createEmoji(layer, '🎉', Math.random()*100+'%', '-10%', '2rem');
+        tl.to(conf, {opacity: 1, y: window.innerHeight, rotation: 360, duration: Math.random()*3+2, ease: "none", repeat: -1}, 0);
+      }
+      for(let i=0; i<5; i++) {
+        const b = createEmoji(layer, '🎈', (20 + i*15)+'%', '100%', '5rem');
+        tl.to(b, {opacity: 1, y: -window.innerHeight, duration: Math.random()*4+4, ease: "power1.in", repeat: -1}, 0);
+      }
+      return tl;
+    }
+  };
+
+  /* ---------- ANIMACIONES INTERNAS Y LLAMADA A ESCENAS ---------- */
+  function animateItemsIn(slide, slideIndex) {
+    // 1. Limpiar escenas anteriores
+    if (activeSceneTimeline) {
+      activeSceneTimeline.kill();
+      activeSceneTimeline = null;
+    }
+    document.querySelectorAll('.decor-layer').forEach(layer => layer.innerHTML = '');
+
+    // 2. Animar contenido de la slide
+    const allAnimatable = slide.querySelectorAll('.anim-text, .eyebrow, .anim-item, .anim, .anim-image');
+    gsap.killTweensOf(allAnimatable);
+    gsap.set(allAnimatable, { x: 0, y: 0, scale: 1, opacity: 1, rotation: 0 }); 
+
+    const texts = slide.querySelectorAll('.anim-text, .eyebrow');
+    const items = slide.querySelectorAll('.anim-item, .anim'); 
+    const images = slide.querySelectorAll('.anim-image'); 
+    
+    if (texts.length > 0) gsap.fromTo(texts, { y: 30, opacity: 0 }, { y: 0, opacity: 1, duration: 0.5, ease: "power3.out", stagger: 0.05 });
+    if (items.length > 0) gsap.fromTo(items, { y: 30, opacity: 0, scale: 0.95 }, { y: 0, opacity: 1, scale: 1, duration: 0.5, ease: "back.out(1.5)", stagger: 0.06, delay: 0.1 });
+    if (images.length > 0) gsap.fromTo(images, { scale: 0.8, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.8, ease: "elastic.out(1, 0.7)", delay: 0.05 });
+
+    // 3. Ejecutar la escena específica de GSAP
+    const layer = slide.querySelector('.decor-layer');
+    if (layer && scenes[slideIndex]) {
+      activeSceneTimeline = scenes[slideIndex](layer);
+    }
+  }
+
+  /* ---------- INICIALIZACIÓN ---------- */
+  updateHUD();
+  animateItemsIn(slides[0], 1);
+
+  function updateHUD() {
+    if (fill && counter) {
+      fill.style.width = `${((current + 1) / total) * 100}%`;
+      counter.textContent = `${current + 1} / ${total}`;
+    }
+  }
+
+  /* ---------- CONTROLES ---------- */
+  document.addEventListener('keydown', e => {
+    if (['ArrowRight', 'Space', 'Enter'].includes(e.code)) { e.preventDefault(); goTo(current + 1); }
+    if (e.code === 'ArrowLeft') { e.preventDefault(); goTo(current - 1); }
+  });
+
+  document.addEventListener('click', (e) => {
+    if (e.clientX > window.innerWidth / 2) {
+      goTo(current + 1);
+    } else {
+      goTo(current - 1);
+    }
+  });
+
+})();
+</script>
+</body>
+</html>
